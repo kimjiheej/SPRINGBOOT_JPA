@@ -1,2 +1,65 @@
-package jpabook.jpashop.domain.service;public class OrderService {
+package jpabook.jpashop.domain.service;
+
+
+import jpabook.jpashop.domain.Delivery;
+import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderItem;
+import jpabook.jpashop.domain.item.Item;
+import jpabook.jpashop.domain.repository.ItemRepository;
+import jpabook.jpashop.domain.repository.MemberRepository;
+import jpabook.jpashop.domain.repository.OrderRepository;
+import jpabook.jpashop.domain.repository.OrderSearch;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+    private final MemberRepository memberRepository;
+    private final ItemRepository itemRepository;
+
+    // 주문
+
+    @Transactional
+    public Long order(Long memberId, Long itemId, int count){
+        Member member = memberRepository.findOne(memberId);
+        Item item = itemRepository.findone(itemId);
+
+        // 배송정보
+        Delivery delivery = new Delivery();
+        delivery.setAddress(member.getAddress());
+
+
+        // 주문상품 생성
+        OrderItem orderItem = OrderItem.createOrderItem(item,item.getPrice(),count);
+
+        //주문 생성
+      Order order =   Order.createOrder(member,delivery,orderItem);
+
+      orderRepository.save((javax.persistence.criteria.Order) order);
+      return order.getId();
+
+    }
+
+    //취소
+
+
+    @Transactional
+    public void cancelOrder(Long orderId){
+        Order order = (Order) orderRepository.findOne(orderId);
+        order.cancel();
+
+    }
+
+    public List<javax.persistence.criteria.Order> findOrders(OrderSearch orderSearch){
+        return orderRepository.findAllByString(orderSearch);
+    }
+
 }

@@ -1,2 +1,6 @@
-package jpabook.jpashop.domain.service;public class UpdateItemDto {
+package jpabook.jpashop.domain.service;
+
+public class UpdateItemDto {
+
+
 }

@@ -1,4 +1,4 @@
-package jpabook.jpashop.service;
+package jpabook.jpashop.domain.service;
 
 
 import jpabook.jpashop.domain.Member;
@@ -13,16 +13,14 @@ import java.util.List;
 
 @Service
 @Transactional // 그래야 로딩이 잘 된다
-@RequiredArgsConstructor // final 있는 필드만을 가지고 생성자를 만들어주는 것이다
+@RequiredArgsConstructor
+// final 있는 필드만을 가지고 생성자를 만들어주는 것이다
 public class MemberService {
 
-    @Autowired
+
     private final MemberRepository memberRepository;
 
-    @Autowired
-    public MemberService(MemberRepository memberRepository){
-        this.memberRepository = memberRepository;
-    }
+
 
     // 회원가입
 
